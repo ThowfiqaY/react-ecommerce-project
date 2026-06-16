@@ -14,16 +14,22 @@ const [loading, setLoading] = useState(true);
 
 
 useEffect(() => {
-  fetch("https://fakestoreapi.com/products")
-    .then((res) => res.json())
-    .then((data) => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch("https://fakestoreapi.com/products");
+      const data = await res.json();
+
+      console.log("API DATA:", data); // check in console
+
       setProducts(data);
-      setLoading(false); // ✅ MUST be here
-    })
-    .catch((err) => {
-      console.log(err);
-      setLoading(false); // ✅ ALSO here
-    });
+    } catch (err) {
+      console.log("API ERROR:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchData();
 }, []);
 const filteredProducts = products.filter(product =>
   product.title.toLowerCase().includes(search.toLowerCase())
